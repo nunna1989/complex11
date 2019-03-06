@@ -3,23 +3,20 @@ services:
   - docker
   
 before_install:
-  - docker build -t nunna/react-test -f ./client/Dockerfile.dev ./client 
+  - docker build -t nunna1989/react-test -f ./client/Dockerfile.dev ./client 
 
 script:
-  - docker run nunna/react-test npm test -- --coverage
+  - docker run nunna1989/react-test npm test -- --coverage
 
 after_success:
-  - docker build -t nunna/multi-client ./client
-  - docker build -t nunna/multi-nginx ./nginx
-  - docker build -t nunna/multi-server ./server
-  - docker build -t nunna/multi-worker ./worker
+  - docker build -t nunna1989/multi-client ./client
+  - docker build -t nunna1989/multi-nginx ./nginx
+  - docker build -t nunna1989/multi-server ./server
+  - docker build -t nunna1989/multi-worker ./worker
 # log in to the docker-cli
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 # Take those images and push them to docker hub
-  - docker push nunna/multi-client
-  - docker push nunna/multi-nginx
-  - docker push nunna/multi-server
-  - docker push nunna/multi-worker
-
-
-  
+  - docker push nunna1989/multi-client
+  - docker push nunna1989/multi-nginx
+  - docker push nunna1989/multi-server
+  - docker push nunna1989/multi-worker
