@@ -1,0 +1,310 @@
+MASTERSERVER
+
+PUBLIC:18.233.165.61
+PRIVATE IP:172.31.89.249
+
+NODE1
+
+PUBLIC IP:35.171.154.52
+PRIVATE IP:172.31.88.58
+
+NODE2
+
+PUBLIC IP:54.84.36.92
+PRIVATE IP:172.31.84.47
+
+ localhost
+[apacheweb]
+172.31.88.58
+[appserver]
+172.31.84.47
+
+http://www.yamllint.com/ to verify the code
+
+--------------------------------------------------------------------------
+
+Adhoc command to install any software
+
+here vim is the software
+
+ansible all -s -m yum -a 'pkg=vim state=installed update_cache=true' 
+
+-----------------------------------------------------------------------------
+Adhoc Command to verify whether the particular software installed or not
+
+ansible all -s -m shell -a 'yum list installed|grep vim'
+
+----------------------------------------------------------------------------
+
+Command for checking the playbook syntax is correct or not
+
+ansible-playbook -s myfirstplaybook.yml --check
+
+----------------------------------------------------------------------------
+
+Command for executing the playbook
+
+ansible-playbook -s myfirstplaybook.yml
+
+----------------------------------------------------------------------------
+SAMPLE PLAYBOOK to install a package
+
+--- #My First playbook
+- hosts : all
+  tasks :
+     - name: Install the tomcat server
+       yum: pkg=tomcat state=installed update_cache=true
+	  
+	   
+To uninstall a package
+
+     
+     - name: Install the logwatch package
+       yum: pkg=logwatch state=absent update_cache=true
+	   
+	   
+-------------------------------------------------------------------------------
+
+Using variables in Ansible playbook
+
+--- #My First playbook using variables
+- hosts : all
+  vars :
+       control_server: 172.31.89.249
+       myuser: test
+  tasks :
+     - name: Install the tomcat server
+       yum: pkg=tomcat state=installed update_cache=true
+
+-------------------------------------------------------------------------------
+
+Using variables along with targets
+
+--- #My First playbookvaraibles with targets
+- hosts : all
+  user : test
+  sudo : yes
+  vars :
+       control_server: 172.31.89.249
+       myuser: test
+  tasks :
+     - name: Install the tomcat server
+       yum: pkg=tomcat state=installed update_cache=true
+
+------------------------------------------------------------------------------
+
+Using variables along with tasks using prompt
+
+--- #My First playbook
+- hosts : all
+  user : test
+  sudo : yes
+  vars :
+       control_server: 172.31.89.249
+       myuser: test
+  vars_prompt:
+  - name: PROMPT
+    prompt: Install the packages?
+  tasks :
+     - name: Install the logwatch package
+       yum: pkg=logwatch state=installed update_cache=true
+     - name: Install the htop package
+       yum: pkg=htop state=installed update_cache=true
+
+-----------------------------------------------------------------------------
+
+Ansible Handlers
+
+Handlers are used to restart the services once its installed in the systems.
+
+Below is the sample code to run the appache services
+
+--- # This is a structural YAML example to install HTTPD on CENTOS
+
+-  hosts: apacheweb
+
+   remote_user: test
+
+   become: yes
+
+   become_method: sudo
+
+   connection: ssh
+
+   gather_facts: yes
+
+   vars:
+
+     username: test
+
+   tasks:
+
+   - name: Install HTTPD server on Redhat Nodes
+
+     yum:
+
+       name: httpd
+
+       state: latest
+
+   - name: ensure apache is running (and enable it at boot)
+
+     service:
+
+       name: httpd
+
+       state: started
+
+       enabled: yes
+
+     notify:
+
+     - startservice
+
+   handlers:
+
+   - name: startservice
+
+     service:
+
+       name: httpd
+
+       state: restarted
+
+------------------------------------------------------------------------------------
+
+1.Outling a playbook
+
+2.Taking our playbook for a dryrun
+
+Dry run is actually checking the playbook is executable or not like 
+
+by using--check we are checking the dryrun
+
+3.Asynchronous polling
+
+To check async is happening by using -v or -vv or -vvv
+
+eg:
+
+ansible-playbook -s myfirstplaybook.yml --vv
+
+4. Interactive playbook
+
+5.Tags
+
+6.Runonce
+
+-------------------------------------------------------------------------------------
+
+Ansible Modules:
+
+
+
+Redhat package management : https://access.redhat.com/solutions/1355683mm
+
+Ansible Adhoc commands:http://docs.ansible.com/ansible/latest/user_guide/intro_adhoc.html
+
+1. File Module:
+
+ansible all -s -m file -a 'path=/etc/fstab'
+
+2. Pause Module
+
+3.Wait Modules
+
+4.Yum Module
+
+5.APT Module (Only for ubunto systems)
+
+6. Service Module
+
+7.Copy Module
+
+8.Command Modules
+
+--- #The Command Modules
+- hosts: all
+  sudo: yes
+  gather_facts: yes
+  connection: ssh
+  tasks:
+  - name: Execute this script command
+    command: /home/test.sh
+	
+--------------------------------------------------------
+
+9.Cron Module
+
+--- #Cron Module
+- hosts: all
+  sudo: yes
+  gather_facts: yes
+  connection: ssh
+  
+  
+  
+  -----------------------
+  
+10. Dubug Module
+
+
+--------------------------------------------------------------
+
+
+ROLES IN PLAYBOOKS
+
+github ansible modules
+
+---------------------------------------------------------
+
+Ansible Command Line usage installing packages
+
+for install package
+
+ansible all -s -m yum -a "pkg=htop state=latest"
+
+for remove package
+
+
+ansible all -s -m yum -a "pkg=htop state=latest"
+
+Ansible Command Line usage services and hosts
+
+--To install hosts
+
+ansible all -s -m yum -a "pkg=httpd state=latest"
+
+--To restart services
+
+ansible all -u test -s -m service -a "name=httpd state=restarted"
+
+
+--To stop services
+
+ansible all -u test -s -m service -a "name=httpd state=stopped"
+
+--To start services
+
+ansible all -u test -s -m service -a "name=httpd state=started"
+
+--To list all the files in directory by using command line
+
+ansible all -u test -s -m command -a "ls -al /var"
+
+
+-- To list the files on specfic hosts
+
+ansible all -i hosts -u test -s -m command -a "ls -al /var"
+
+
+-- Ansible commands and shells
+
+Cron Job
+
+
+
+
+
+
+
