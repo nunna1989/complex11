@@ -21,15 +21,16 @@ after_success:
   - docker push nunna1989/multi-server
   - docker push nunna1989/multi-worker
   
-  deploy:
-    provider: elasticbeanstalk
-    region: us-west-2
-    app: multi-docker
-    env: MultiDocker-env
-    bucket_name: elasticbeanstalk-us-west-2-535460852277
-    bucket_path: docker_multi
-    on:
-      branch: master
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key:
-      secure: $AWS_SECRET_KEY
+deploy:
+  provider: elasticbeanstalk
+  region: us-west-2
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-us-west-2-535460852277
+  bucket_path: docker_multi
+  on:
+     branch: master
+   access_key_id: $AWS_ACCESS_KEY
+   secret_access_key:
+     secure: $AWS_SECRET_KEY
+    
