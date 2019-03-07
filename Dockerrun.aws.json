@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+	  "image": "nunna1989/multi-client",
+	  "hostname": "client",
+	  "essential": false
+	},
+	{
+	   "name": "server",
+       "image": "nunna1989/multi-server",
+       "hostname": "api",
+       "essential": false
+	},
+    {
+	   "name": "worker",
+	   "image": "nunna1989/multi-worker",
+	   "hostname": "worker",
+	   "essential": false
+	},
+    {
+	   "name": "nginx",
+	   "image": "nunna1989/multi-nginx",
+	   "hostname": "nginx",
+	   "essential":true,
+	   "portMappings": [
+	    {
+		   "hostPort":80,
+		   "conainerPort": 80
+		}
+	  ],
+	  "links":["client","server"]
+    }	
+  ] 
+}
